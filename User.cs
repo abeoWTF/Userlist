@@ -9,26 +9,25 @@ namespace Labb5
 {
     public class User
     {
-        public string Name { get; set; }
+        public string FullName { get; set; }
         public string Email { get; set; }
         
-        public User() { }
+       
 
         public User(string name, string email)
         {
-            this.Name = name;
+            this.FullName = name;
             this.Email = email;
         }
 
-        
 
-        //public override string ToString()
-        //{
 
-        //    string newFormat = string.Format("[{0}, {1}]", Name, Email);
-        //    return newFormat;
+        public override string ToString()
+        {
 
-        //}
+            return String.Format("Email: {0}", this.Email);
+
+        }
 
 
     }

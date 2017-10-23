@@ -49,7 +49,11 @@ namespace Labb5
         public MainWindow()
         {
             InitializeComponent();
+            //ListBox_RegularUser.DisplayMemberPath = "FullName";
+            //ListBox_RegularUser.SelectedValuePath = "Email";
+
         }
+
 
         //Create user.
         private void CreateUser_btn_Click(object sender, RoutedEventArgs e)
@@ -58,7 +62,6 @@ namespace Labb5
             {
                 MessageBox.Show("The name already exists.", "Error");
                 CreateUser_btn.IsEnabled = false;
-
 
             }
             else if (string.IsNullOrWhiteSpace(TextBox_CreateName.Text))
@@ -78,10 +81,11 @@ namespace Labb5
                 CreateUser_btn.IsEnabled = true;
                 Thelist.Add(new User(TextBox_CreateName.Text, TextBox_CreateEmail.Text)
                 {
-                    Name = TextBox_CreateName.Text,
+                    FullName = TextBox_CreateName.Text,
                     Email = TextBox_CreateEmail.Text
                 });
-                ListBox_RegularUser.Items.Add(TextBox_CreateName.Text);
+                
+                ListBox_RegularUser.Items.Add(Thelist.LastOrDefault());
                 //Clear text-extry boxes
                 TextBox_CreateName.Text = String.Empty;
                 TextBox_CreateEmail.Text = string.Empty;
@@ -93,8 +97,8 @@ namespace Labb5
         //Check if correct email.
         private void TextBox_CreateEmail_SelectionChanged(object sender, RoutedEventArgs e)
         {
-            TextBox_CreateEmail.Opacity = 100;
-            TextBox_CreateEmail.FontSize = 10;
+            //TextBox_CreateEmail.Opacity = 100;
+            //TextBox_CreateEmail.FontSize = 10;
 
             if (CheckMail(TextBox_CreateEmail.Text))
             {
@@ -120,7 +124,7 @@ namespace Labb5
                     
                     Thelist.Add(new User(TextBox_CreateName.Text, TextBox_CreateEmail.Text)
                     {
-                        Name = TextBox_CreateName.Text,
+                        FullName = TextBox_CreateName.Text,
                         Email = TextBox_CreateEmail.Text
                     });
                     ListBox_RegularUser.Items.Add(TextBox_CreateName.Text);
@@ -141,7 +145,7 @@ namespace Labb5
                     ListBox_AdminUser.Items.RemoveAt(index);
                     Thelist.Add(new User(TextBox_CreateName.Text, TextBox_CreateEmail.Text)
                     {
-                        Name = TextBox_CreateName.Text,
+                        FullName = TextBox_CreateName.Text,
                         Email = TextBox_CreateEmail.Text
                     });
                     ListBox_AdminUser.Items.Add(TextBox_CreateName.Text);
@@ -155,44 +159,35 @@ namespace Labb5
 
         private void ListBox_RegularUser_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            
-            if (ListBox_RegularUser.SelectedIndex != -1 || ListBox_AdminUser.SelectedIndex != -1)
+
+            if (ListBox_RegularUser.SelectedIndex != -1)
             {
-                RemoveUser_btn.IsEnabled = true;
-                MoveTo_adminBtn.IsEnabled = true;
-                UserInfo.Visibility = Visibility.Visible;
-                EditUser.IsEnabled = true;
-                object pos = ListBox_RegularUser.SelectedItems;
-
-                foreach (var c in Thelist)
-
-                {
-                    UserInfo.Content = c.Email;
-                }
-
+                
+                    RemoveUser_btn.IsEnabled = true;
+                    MoveTo_adminBtn.IsEnabled = true;
+                    AdminUserInfo_label.Visibility = Visibility.Hidden;
+                    UserInfo.Visibility = Visibility.Visible;
+                    EditUser.IsEnabled = true;
+                
+                    object pos = ListBox_RegularUser.SelectedItem;
+                    try
+                    {
+                        UserInfo.Content = pos.ToString();
+                    }
+                    catch { }
+                    Console.ReadLine();
 
                 
-                
-
-                Console.ReadLine();
-
-                
-
-
-
-
-
-
-
+                //else
+                //{
+                //    RemoveUser_btn.IsEnabled = false;
+                //    MoveTo_adminBtn.IsEnabled = false;
+                //    MoveToUser_btn.IsEnabled = false;
+                //    UserInfo.Visibility = Visibility.Hidden;
+                //    EditUser.IsEnabled = false;
+                //}
             }
-            else
-            {
-                RemoveUser_btn.IsEnabled = false;
-                MoveTo_adminBtn.IsEnabled = false;
-                UserInfo.Visibility = Visibility.Hidden;
-                EditUser.IsEnabled = false;
-            }
-            
+
         }
 
         private void MoveTo_adminBtn_Click(object sender, RoutedEventArgs e)
@@ -217,31 +212,36 @@ namespace Labb5
         private void ListBox_AdminUser_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
-            if (ListBox_RegularUser.SelectedIndex != -1 || ListBox_AdminUser.SelectedIndex != -1)
+            if (ListBox_AdminUser.SelectedIndex != -1)
             {
-                RemoveUser_btn.IsEnabled = true;
-                MoveToUser_btn.IsEnabled = true;
-                AdminUserInfo_label.Visibility = Visibility.Visible;
-                EditUser.IsEnabled = true;
-                //int pos = ListBox_RegularUser.SelectedIndex;
-                try
-                {
+                
+                    RemoveUser_btn.IsEnabled = true;
+                    MoveTo_adminBtn.IsEnabled = false;
+                    MoveToUser_btn.IsEnabled = true;
+                    AdminUserInfo_label.Visibility = Visibility.Visible;
+                    UserInfo.Visibility = Visibility.Hidden;
+                    EditUser.IsEnabled = true;
+                
+                    object pos = ListBox_AdminUser.SelectedItem;
+                    try
+                    {
+                        AdminUserInfo_label.Content = pos.ToString();
+                    }
+                    catch { }
+                    Console.ReadLine();
 
-                   
-                 //   UserInfo.Content = Thelist.ElementAt(pos);
-                }
-
-                catch { }
-
+                
+               
+                
+                    ////UserInfo.Visibility = Visibility.Visible;
+                    //MoveToUser_btn.IsEnabled = false;
+                    //RemoveUser_btn.IsEnabled = false;
+                    //MoveTo_adminBtn.IsEnabled = false;
+                    //AdminUserInfo_label.Visibility = Visibility.Hidden;
+                    //EditUser.IsEnabled = false;
+                
             }
-            else
-            {
-                MoveToUser_btn.IsEnabled = false;
-                RemoveUser_btn.IsEnabled = false;
-                MoveTo_adminBtn.IsEnabled = false;
-                AdminUserInfo_label.Visibility = Visibility.Hidden;
-                EditUser.IsEnabled = false;
-            }
+           
         }
 
         private void RemoveUser_btn_Click(object sender, RoutedEventArgs e)

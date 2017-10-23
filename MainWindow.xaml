@@ -8,22 +8,22 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="442.188" Width="713.634">
     <Grid>
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="179*"/>
             <ColumnDefinition Width="453*"/>
         </Grid.ColumnDefinitions>
-        <TextBox x:Name="TextBox_CreateName" HorizontalAlignment="Left" Height="23" Margin="133,39,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" Opacity="0.4" FontSize="10" Grid.ColumnSpan="2"/>
-        <TextBox x:Name="TextBox_CreateEmail" HorizontalAlignment="Left" Height="23" Margin="133,67,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" Opacity="0.4" SelectionChanged="TextBox_CreateEmail_SelectionChanged" FontSize="10" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="TextBox_CreateName" HorizontalAlignment="Left" Height="23" Margin="133,39,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" Opacity="0.4" FontSize="10" Grid.ColumnSpan="2" SelectionOpacity="1"/>
+        <TextBox x:Name="TextBox_CreateEmail" HorizontalAlignment="Left" Height="23" Margin="133,67,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" Opacity="0.4" SelectionChanged="TextBox_CreateEmail_SelectionChanged" FontSize="10" Grid.ColumnSpan="2" SelectionOpacity="1"/>
         <Label Content="Name:" HorizontalAlignment="Left" Margin="89,36,0,0" VerticalAlignment="Top"/>
         <Label Content="Email adress:" HorizontalAlignment="Left" Margin="55,62,0,0" VerticalAlignment="Top"/>
         <Label Content="Create user:" HorizontalAlignment="Left" Margin="132,13,0,0" VerticalAlignment="Top" Width="110" Grid.ColumnSpan="2"/>
         <Button x:Name="CreateUser_btn" Content="Create User" HorizontalAlignment="Left" Margin="133,95,0,0" VerticalAlignment="Top" Width="75" Click="CreateUser_btn_Click" IsEnabled="False" Grid.ColumnSpan="2"/>
-        <ListBox x:Name="ListBox_RegularUser" HorizontalAlignment="Left" Height="206" Margin="116,163,0,0" VerticalAlignment="Top" Width="122" SelectionChanged="ListBox_RegularUser_SelectionChanged"  Grid.ColumnSpan="2"  >
-            <ListBox.DataContext>
-                <Properties:Resources/>
-            </ListBox.DataContext>
+        <ListBox x:Name="ListBox_RegularUser" HorizontalAlignment="Left" Height="206" Margin="116,163,0,0" VerticalAlignment="Top" Width="122" SelectionChanged="ListBox_RegularUser_SelectionChanged"  Grid.ColumnSpan="2" DisplayMemberPath="FullName" SelectedValuePath="Email">
+           
+
         </ListBox>
-        <ListBox x:Name="ListBox_AdminUser" HorizontalAlignment="Left" Height="206" Margin="226,163,0,0" VerticalAlignment="Top" Width="122" Grid.Column="1" SelectionChanged="ListBox_AdminUser_SelectionChanged" />
+        <ListBox x:Name="ListBox_AdminUser" HorizontalAlignment="Left" Height="206" Margin="226,163,0,0" VerticalAlignment="Top" Width="122" Grid.Column="1" SelectionChanged="ListBox_AdminUser_SelectionChanged" DisplayMemberPath="FullName" SelectedValuePath="Email" />
         <Label x:Name="InvalidEmailAdress" Content="- Invalid email-adress" HorizontalAlignment="Left" Margin="127,67,0,0" VerticalAlignment="Top" FontSize="8" IsEnabled="False" Grid.Column="1"/>
         <Button x:Name="EditUser" Content="Update info" HorizontalAlignment="Left" Margin="26,95,0,0" VerticalAlignment="Top" Width="75" Click="EditUser_Click" IsEnabled="False" Grid.Column="1"/>
         <Label x:Name="UserInfo" Content="" HorizontalAlignment="Left" Margin="242,18,0,0" VerticalAlignment="Top" Width="228" Height="72" Grid.Column="1"/>
