@@ -1,38 +1,36 @@
-﻿<Window
+﻿<Window x:Class="Labb5.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Labb5"
-        xmlns:Properties="clr-namespace:Labb5.Properties" x:Class="Labb5.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="442.188" Width="713.634">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="179*"/>
-            <ColumnDefinition Width="453*"/>
-        </Grid.ColumnDefinitions>
-        <TextBox x:Name="TextBox_CreateName" HorizontalAlignment="Left" Height="23" Margin="133,39,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" Opacity="0.4" FontSize="10" Grid.ColumnSpan="2"/>
-        <TextBox x:Name="TextBox_CreateEmail" HorizontalAlignment="Left" Height="23" Margin="133,67,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" Opacity="0.4" SelectionChanged="TextBox_CreateEmail_SelectionChanged" FontSize="10" Grid.ColumnSpan="2"/>
-        <Label Content="Name:" HorizontalAlignment="Left" Margin="89,36,0,0" VerticalAlignment="Top"/>
-        <Label Content="Email adress:" HorizontalAlignment="Left" Margin="55,62,0,0" VerticalAlignment="Top"/>
-        <Label Content="Create user:" HorizontalAlignment="Left" Margin="132,13,0,0" VerticalAlignment="Top" Width="110" Grid.ColumnSpan="2"/>
-        <Button x:Name="CreateUser_btn" Content="Create User" HorizontalAlignment="Left" Margin="133,95,0,0" VerticalAlignment="Top" Width="75" Click="CreateUser_btn_Click" IsEnabled="False" Grid.ColumnSpan="2"/>
-        <ListBox x:Name="ListBox_RegularUser" HorizontalAlignment="Left" Height="206" Margin="116,163,0,0" VerticalAlignment="Top" Width="122" SelectionChanged="ListBox_RegularUser_SelectionChanged"  Grid.ColumnSpan="2"  >
-            <ListBox.DataContext>
-                <Properties:Resources/>
-            </ListBox.DataContext>
+        Title="MainWindow" Margin="0,0,0,0" Width="827" Height="522" Background="#FF614747">
+    <Grid x:Name="wdwMainWindow">
+        <Label x:Name="lblEditUsers" Content="Add user:" HorizontalAlignment="Left" Margin="20,20,0,0" VerticalAlignment="Top" Height="25" Width="75" Background="#FFF3EFEF"/>
+        <Label x:Name="lblUsers" Content="User List" HorizontalAlignment="Left" Margin="290,21,0,0" VerticalAlignment="Top" Height="25" Width="65" FontWeight="Bold" Background="#FFF3EFEF"/>
+        <Label x:Name="lblAdmins" Content="Admin List" HorizontalAlignment="Left" Margin="560,18,0,0" VerticalAlignment="Top" Height="25" Width="70" FontWeight="Bold" Background="#FFF3EFEF"/>
+        <Button x:Name="btnAddUser" Content="Add User" HorizontalAlignment="Left" Margin="20,136,0,0" VerticalAlignment="Top" Width="75" Click="btnAddUser_Click" IsEnabled="False"/>
+        <Button x:Name="btnDeleteUser" Content="Delete User" HorizontalAlignment="Left" Margin="100,136,0,0" VerticalAlignment="Top" Width="75" Click="btnDeleteUser_Click" IsEnabled="False"/>
+        <Button x:Name="btnUpdateUser" Content="Update User" HorizontalAlignment="Left" Margin="180,136,0,0" VerticalAlignment="Top" Width="75" Click="btnUpdateUser_Click" IsEnabled="False"/>
+        <TextBox x:Name="txtName" HorizontalAlignment="Left" Height="23" Margin="20,60,0,0" TextWrapping="Wrap" Text="Your Name" VerticalAlignment="Top" Width="120" GotFocus="txtName_GotFocus"/>
+        <TextBox x:Name="txtEMail" HorizontalAlignment="Left" Height="23" Margin="20,97,0,0" TextWrapping="Wrap" Text="Your Email" VerticalAlignment="Top" Width="120" GotFocus="txtEMail_GotFocus" TextChanged="txtEMail_TextChanged"/>
+        <ListBox x:Name="lstUsers" HorizontalAlignment="Left" Height="156" Margin="290,58,0,0" VerticalAlignment="Top" Width="125" SelectionChanged="lstUsers_SelectionChanged" DisplayMemberPath="Name" SelectedValuePath="EMail"/>
+        <ListBox x:Name="lstAdmins" HorizontalAlignment="Left" Height="156" Margin="587,58,0,0" VerticalAlignment="Top" Width="128" RenderTransformOrigin="0.5,0.5" SelectionChanged="lstAdmins_SelectionChanged" DisplayMemberPath="Name" SelectedValuePath="EMail">
+            <ListBox.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform AngleX="0.899"/>
+                    <RotateTransform/>
+                    <TranslateTransform X="-0.784"/>
+                </TransformGroup>
+            </ListBox.RenderTransform>
         </ListBox>
-        <ListBox x:Name="ListBox_AdminUser" HorizontalAlignment="Left" Height="206" Margin="226,163,0,0" VerticalAlignment="Top" Width="122" Grid.Column="1" SelectionChanged="ListBox_AdminUser_SelectionChanged" />
-        <Label x:Name="InvalidEmailAdress" Content="- Invalid email-adress" HorizontalAlignment="Left" Margin="127,67,0,0" VerticalAlignment="Top" FontSize="8" IsEnabled="False" Grid.Column="1"/>
-        <Button x:Name="EditUser" Content="Update info" HorizontalAlignment="Left" Margin="26,95,0,0" VerticalAlignment="Top" Width="75" Click="EditUser_Click" IsEnabled="False" Grid.Column="1"/>
-        <Label x:Name="UserInfo" Content="" HorizontalAlignment="Left" Margin="242,18,0,0" VerticalAlignment="Top" Width="228" Height="72" Grid.Column="1"/>
-        <Label x:Name="Userlist_Label" Content="           User list" HorizontalAlignment="Left" Margin="116,132,0,0" VerticalAlignment="Top" Width="122" Grid.ColumnSpan="2"/>
-        <Label x:Name="AdminList_Label" Content="         Admin list&#xA;" Grid.Column="1" HorizontalAlignment="Left" Margin="226,132,0,0" VerticalAlignment="Top" Width="122"/>
-        <Button x:Name="MoveTo_adminBtn" Content="Move to admin -&gt;" Grid.Column="1" HorizontalAlignment="Left" Margin="84,204,0,0" VerticalAlignment="Top" Width="116" RenderTransformOrigin="0.698,0.441" Click="MoveTo_adminBtn_Click" IsEnabled="False"/>
-        <Button x:Name="MoveToUser_btn" Content="&lt;- Move to user" Grid.Column="1" HorizontalAlignment="Left" Margin="84,229,0,0" VerticalAlignment="Top" Width="116" Click="MoveToUser_btn_Click" IsEnabled="False"/>
-        <Label x:Name="AdminUserInfo_label" Content="" HorizontalAlignment="Left" Margin="364,163,0,0" VerticalAlignment="Top" Width="106" Height="34" Grid.Column="1"/>
-        <Button x:Name="RemoveUser_btn" Content="Remove user" Grid.Column="1" HorizontalAlignment="Left" Margin="84,337,0,0" VerticalAlignment="Top" Width="116" Click="RemoveUser_btn_Click" IsEnabled="False"/>
+        <Label x:Name="lblFullUserInfo" Content="User information" HorizontalAlignment="Left" Margin="290,224,0,0" VerticalAlignment="Top" Height="45" Width="125" Background="#FFF3EFEF"/>
+        <Label x:Name="lblFullAdminInfo" Content="User information" HorizontalAlignment="Left" Margin="590,224,0,0" VerticalAlignment="Top" Height="45" Width="125" Background="#FFF3EFEF"/>
+        <Button x:Name="btnBecomeAdmin" Content="Become Admin  -&gt;" HorizontalAlignment="Left" Margin="436,68,0,0" VerticalAlignment="Top" Width="110" Click="btnBecomeAdmin_Click" IsEnabled="False"/>
+        <Button x:Name="btnBecomeUser" Content="&lt;- Become User" HorizontalAlignment="Left" Margin="436,101,0,0" VerticalAlignment="Top" Width="110" Click="btnBecomeUser_Click" IsEnabled="False"/>
+        <Label x:Name="InvalidEmailAdress" Content="- Invalid email-adress" HorizontalAlignment="Left" Margin="150,100,0,0" VerticalAlignment="Top" IsEnabled="False" FontSize="8"/>
 
     </Grid>
 </Window>
