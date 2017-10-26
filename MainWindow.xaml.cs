@@ -1,32 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Xml.Linq;
 
 namespace Labb5
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    /// 
-    
     public partial class MainWindow : Window
     {
-       
-        public bool IsUser = true;
-        //Email-check(Regex)
+        //Checkar mailadress.
         public bool CheckMail(string emailText)
         {
             Match matches = Regex.Match(emailText, @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*"
@@ -42,236 +38,247 @@ namespace Labb5
             }
         }
 
+        //Nyskapad lista av Users
         List<User> Thelist = new List<User>();
-        
-
 
         public MainWindow()
         {
             InitializeComponent();
-            //ListBox_RegularUser.DisplayMemberPath = "FullName";
-            //ListBox_RegularUser.SelectedValuePath = "Email";
-
         }
-
-
-        //Create user.
-        private void CreateUser_btn_Click(object sender, RoutedEventArgs e)
+        
+        //Checka och lägga till user.
+        private void btnAddUser_Click(object sender, RoutedEventArgs e)
         {
-            if (ListBox_RegularUser.Items.Contains(TextBox_CreateName.Text) || ListBox_AdminUser.Items.Contains(TextBox_CreateName.Text))
+            var item = Thelist.FirstOrDefault(o => o.Name == txtName.Text);
+            if (item != null)
             {
                 MessageBox.Show("The name already exists.", "Error");
-                CreateUser_btn.IsEnabled = false;
-
+                btnAddUser.IsEnabled = false;
             }
-            else if (string.IsNullOrWhiteSpace(TextBox_CreateName.Text))
+            else if (string.IsNullOrWhiteSpace(txtName.Text))
             {
                 MessageBox.Show("Please enter a valid name.", "Error");
-                CreateUser_btn.IsEnabled = false;
-
+                btnAddUser.IsEnabled = false;
             }
-            else if (TextBox_CreateName.Text == string.Empty)
+            else if (txtName.Text == string.Empty)
             {
                 MessageBox.Show("Please enter a valid name.", "Error");
-                CreateUser_btn.IsEnabled = false;
-                
+                btnAddUser.IsEnabled = false;
             }
             else
             {
-                CreateUser_btn.IsEnabled = true;
-                Thelist.Add(new User(TextBox_CreateName.Text, TextBox_CreateEmail.Text)
+                btnAddUser.IsEnabled = true;
+                Thelist.Add(new User(txtName.Text, txtEMail.Text)
                 {
-                    FullName = TextBox_CreateName.Text,
-                    Email = TextBox_CreateEmail.Text
+                    Name = txtName.Text,
+                    EMail = txtEMail.Text
                 });
-                
-                ListBox_RegularUser.Items.Add(Thelist.LastOrDefault());
-                //Clear text-extry boxes
-                TextBox_CreateName.Text = String.Empty;
-                TextBox_CreateEmail.Text = string.Empty;
-                CreateUser_btn.IsEnabled = false;
-                InvalidEmailAdress.Visibility = Visibility.Visible;
+               
+                lstUsers.Items.Add(Thelist.LastOrDefault());
+                btnAddUser.IsEnabled = false;
             }
+
+            //ta bort text från textboxarna
+            ClearTextBoxes();
         }
-
-        //Check if correct email.
-        private void TextBox_CreateEmail_SelectionChanged(object sender, RoutedEventArgs e)
+        
+        //Uppdatera user
+        private void btnUpdateUser_Click(object sender, RoutedEventArgs e)
         {
-            //TextBox_CreateEmail.Opacity = 100;
-            //TextBox_CreateEmail.FontSize = 10;
-
-            if (CheckMail(TextBox_CreateEmail.Text))
+            if (lstUsers.SelectedIndex != -1)
             {
-                InvalidEmailAdress.Visibility = Visibility.Hidden;
-                CreateUser_btn.IsEnabled = true;
-            }
-        }
-
-        private void EditUser_Click(object sender, RoutedEventArgs e)
-        {
-            
-            if (IsUser)
-            {
-                int index = ListBox_RegularUser.SelectedIndex;
-                if (!CheckMail(TextBox_CreateEmail.Text))
+                int index = lstUsers.SelectedIndex;
+                if (!CheckMail(txtEMail.Text))
                 {
-                    InvalidEmailAdress.Visibility = Visibility.Visible;
                     MessageBox.Show("Plese enter a valid email adress!", "Error!");
                 }
                 else
                 {
-                    ListBox_RegularUser.Items.RemoveAt(index);
-                    
-                    Thelist.Add(new User(TextBox_CreateName.Text, TextBox_CreateEmail.Text)
+                    lstUsers.Items.RemoveAt(index);
+
+                    Thelist.Add(new User(txtName.Text, txtEMail.Text)
                     {
-                        FullName = TextBox_CreateName.Text,
-                        Email = TextBox_CreateEmail.Text
+                        Name = txtName.Text,
+                        EMail = txtEMail.Text
                     });
-                    ListBox_RegularUser.Items.Add(TextBox_CreateName.Text);
-                    TextBox_CreateName.Text = String.Empty;
-                    TextBox_CreateEmail.Text = string.Empty;
+                    lstUsers.Items.Add(Thelist.LastOrDefault());
+
+                    //ta bort text från textboxarna
+                    ClearTextBoxes();
                 }
             }
-            else if (IsUser == false)
+            else if (lstAdmins.SelectedIndex != -1)
             {
-                int index = ListBox_AdminUser.SelectedIndex;
-                if (!CheckMail(TextBox_CreateEmail.Text))
+                int index = lstAdmins.SelectedIndex;
+                if (!CheckMail(txtEMail.Text))
                 {
-                    InvalidEmailAdress.Visibility = Visibility.Visible;
                     MessageBox.Show("Plese enter a valid email adress!", "Error!");
                 }
                 else
                 {
-                    ListBox_AdminUser.Items.RemoveAt(index);
-                    Thelist.Add(new User(TextBox_CreateName.Text, TextBox_CreateEmail.Text)
+                    lstAdmins.Items.RemoveAt(index);
+                    Thelist.Add(new User(txtName.Text, txtEMail.Text)
                     {
-                        FullName = TextBox_CreateName.Text,
-                        Email = TextBox_CreateEmail.Text
+                        Name = txtName.Text,
+                        EMail = txtEMail.Text
                     });
-                    ListBox_AdminUser.Items.Add(TextBox_CreateName.Text);
-                    TextBox_CreateName.Text = String.Empty;
-                    TextBox_CreateEmail.Text = string.Empty;
+                    lstAdmins.Items.Add(Thelist.LastOrDefault());
+
+                    //ta bort text från textboxarna
+                    ClearTextBoxes();
                 }
 
             }
 
+            //ta bort text från textboxarna
+            ClearTextBoxes();
         }
 
-        private void ListBox_RegularUser_SelectionChanged(object sender, SelectionChangedEventArgs e)
+       //sätter enable tll av eller på beroende på om item är valt i user-listboxen för tre stycken knappar
+        private void lstUsers_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
-            if (ListBox_RegularUser.SelectedIndex != -1)
+            if (lstUsers.SelectedItem != null)
             {
-                
-                    RemoveUser_btn.IsEnabled = true;
-                    MoveTo_adminBtn.IsEnabled = true;
-                    AdminUserInfo_label.Visibility = Visibility.Hidden;
-                    UserInfo.Visibility = Visibility.Visible;
-                    EditUser.IsEnabled = true;
-                
-                    object pos = ListBox_RegularUser.SelectedItem;
-                    try
-                    {
-                        UserInfo.Content = pos.ToString();
-                    }
-                    catch { }
-                    Console.ReadLine();
+                btnUpdateUser.IsEnabled = true;
+                btnDeleteUser.IsEnabled = true;
+                btnBecomeAdmin.IsEnabled = true;
+                lblFullUserInfo.Visibility = Visibility.Visible;
+            }
+            else if(lstUsers.SelectedItem == null)
+            {
+                btnDeleteUser.IsEnabled = false;
+                btnBecomeAdmin.IsEnabled = false;
+                lblFullUserInfo.Visibility = Visibility.Hidden;
+            }
+            
+            object pos = lstUsers.SelectedItem;
+            try
+            {
+                lblFullUserInfo.Content = pos.ToString();
+            }
+            catch { }
 
-                
-                //else
-                //{
-                //    RemoveUser_btn.IsEnabled = false;
-                //    MoveTo_adminBtn.IsEnabled = false;
-                //    MoveToUser_btn.IsEnabled = false;
-                //    UserInfo.Visibility = Visibility.Hidden;
-                //    EditUser.IsEnabled = false;
-                //}
+        }
+
+        //sätter enable till av eller på beroende på om item är valt i admin-listboxen för BecomeUser-knappen
+        private void lstAdmins_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (lstAdmins.SelectedItem != null) { 
+                btnBecomeUser.IsEnabled = true;
+                btnUpdateUser.IsEnabled = true;
+                btnDeleteUser.IsEnabled = true;
+
+                lblFullAdminInfo.Visibility = Visibility.Visible;
+            }
+        else if (lstAdmins.SelectedItem == null)
+            {
+                lblFullAdminInfo.Visibility = Visibility.Hidden;
+                btnBecomeUser.IsEnabled = false;
+                btnDeleteUser.IsEnabled = false;
+            }
+            
+            object pos = lstAdmins.SelectedItem;
+            try
+            {
+                lblFullAdminInfo.Content = pos.ToString();
+            }
+            catch { }
+        }
+        // Tar bort User från listan av users och listbox
+        private void btnDeleteUser_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstUsers.SelectedItem != null)
+            {
+                try { 
+                var item = Thelist.LastOrDefault(x => txtName.Text == Name);
+                    if (item != null)
+                    {
+                        Thelist.Remove(item);
+                    }
+                    lstUsers.Items.Remove(lstUsers.SelectedItem);
+                }
+                catch { }
             }
 
+            else if (lstAdmins.SelectedItem != null)
+            {
+                try
+                {
+                    var item = Thelist.LastOrDefault(x => txtName.Text == Name);
+                    if (item != null)
+                    {
+                        Thelist.Remove(item);
+                    }
+                    lstAdmins.Items.Remove(lstAdmins.SelectedItem);
+                }
+                catch { }
+            }
         }
 
-        private void MoveTo_adminBtn_Click(object sender, RoutedEventArgs e)
+        //Omvandla user till admin
+        private void btnBecomeAdmin_Click(object sender, RoutedEventArgs e)
         {
-          
-                ListBox_AdminUser.Items.Add(ListBox_RegularUser.SelectedItem);
-                IsUser = false;
-                ListBox_RegularUser.Items.Remove(ListBox_RegularUser.SelectedItem);
+            if (lstUsers.SelectedItem != null)
+            {
+                lstAdmins.Items.Add(lstUsers.SelectedItem);
+                lstUsers.Items.Remove(lstUsers.SelectedItem);
+            }
             
         }
-
-        private void MoveToUser_btn_Click(object sender, RoutedEventArgs e)
+        //Omvandla till user
+        private void btnBecomeUser_Click(object sender, RoutedEventArgs e)
         {
-            if (ListBox_RegularUser.SelectedIndex != -1 || ListBox_AdminUser.SelectedIndex != -1)
+            if (lstAdmins.SelectedItem != null)
             {
-                ListBox_RegularUser.Items.Add(ListBox_AdminUser.SelectedItem);
-                IsUser = true;
-                ListBox_AdminUser.Items.Remove(ListBox_AdminUser.SelectedItem);
+                lstUsers.Items.Add(lstAdmins.SelectedItem);
+                lstAdmins.Items.Remove(lstAdmins.SelectedItem);
             }
+ 
+        }
+        //rensar textboxarna från default-text
+        private void txtName_GotFocus(object sender, RoutedEventArgs e)
+        {
+           txtName.Clear();
         }
 
-        private void ListBox_AdminUser_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void txtEMail_GotFocus(object sender, RoutedEventArgs e)
         {
-
-            if (ListBox_AdminUser.SelectedIndex != -1)
-            {
-                
-                    RemoveUser_btn.IsEnabled = true;
-                    MoveTo_adminBtn.IsEnabled = false;
-                    MoveToUser_btn.IsEnabled = true;
-                    AdminUserInfo_label.Visibility = Visibility.Visible;
-                    UserInfo.Visibility = Visibility.Hidden;
-                    EditUser.IsEnabled = true;
-                
-                    object pos = ListBox_AdminUser.SelectedItem;
-                    try
-                    {
-                        AdminUserInfo_label.Content = pos.ToString();
-                    }
-                    catch { }
-                    Console.ReadLine();
-
-                
-               
-                
-                    ////UserInfo.Visibility = Visibility.Visible;
-                    //MoveToUser_btn.IsEnabled = false;
-                    //RemoveUser_btn.IsEnabled = false;
-                    //MoveTo_adminBtn.IsEnabled = false;
-                    //AdminUserInfo_label.Visibility = Visibility.Hidden;
-                    //EditUser.IsEnabled = false;
-                
-            }
-           
+           txtEMail.Clear();
         }
 
-        private void RemoveUser_btn_Click(object sender, RoutedEventArgs e)
+        //hjälpmetod för rensning av textboxar 
+        public void ClearTextBoxes()
         {
-            if (ListBox_RegularUser.SelectedIndex != -1 || ListBox_AdminUser.SelectedIndex != -1)
-            {
-               
-                if (IsUser)
-                {
-                    int index = ListBox_RegularUser.SelectedIndex;
-                    ListBox_RegularUser.Items.RemoveAt(index);
-                    Thelist.RemoveAt(index);
-                }
-                else if (IsUser == false)
-                {
-                    try
-                    {
-                        int index = ListBox_AdminUser.SelectedIndex;
-                        ListBox_AdminUser.Items.RemoveAt(index);
-                        Thelist.RemoveAt(index);
-                    }
-                    catch
-                    {
-                    }
-                }
-            }
-           
-
+            txtName.Clear();
+            txtEMail.Clear();
         }
 
 
+        //Slår på add-user om mail-adressen är korrekt ifylld. (regex)
+        private void txtEMail_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (CheckMail(txtEMail.Text))
+            {
+                btnAddUser.IsEnabled = true;
+            }
+        }
+    }  // MainWindow class ends here
+
+    public class User
+    {
+        public string Name { get; set; }
+        public  string EMail { get; set; }
+
+        public User(string name, string email)
+        {
+            this.Name= name;
+            this.EMail = email;
+        }
+        
+        //overtide för korrekt info
+        public override string ToString()
+        {
+            return String.Format("Name: {0}\n@: {1}", this.Name, this.EMail);
+        }
     }
-    }
+} //EOF

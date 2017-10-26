@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AB49AD6F-FF1A-46E5-B104-2F5D472FD2CF}</ProjectGuid>
+    <ProjectGuid>{7CBCEB52-2905-4829-8D09-007434C4F9BD}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Labb5</RootNamespace>
     <AssemblyName>Labb5</AssemblyName>
@@ -54,7 +54,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="User.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
