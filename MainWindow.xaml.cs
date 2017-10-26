@@ -22,6 +22,7 @@ namespace Labb5
     /// </summary>
     public partial class MainWindow : Window
     {
+        //Checkar mailadress.
         public bool CheckMail(string emailText)
         {
             Match matches = Regex.Match(emailText, @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*"
@@ -36,61 +37,52 @@ namespace Labb5
                 return false;
             }
         }
+
+        //Nyskapad lista av Users
         List<User> Thelist = new List<User>();
 
         public MainWindow()
         {
             InitializeComponent();
         }
-
         
-
+        //Checka och lägga till user.
         private void btnAddUser_Click(object sender, RoutedEventArgs e)
         {
-         
-            if (lstUsers.Items.Contains(txtName.Text) || lstUsers.Items.Contains(txtName.Text))
+            var item = Thelist.FirstOrDefault(o => o.Name == txtName.Text);
+            if (item != null)
             {
                 MessageBox.Show("The name already exists.", "Error");
                 btnAddUser.IsEnabled = false;
-
             }
             else if (string.IsNullOrWhiteSpace(txtName.Text))
             {
                 MessageBox.Show("Please enter a valid name.", "Error");
                 btnAddUser.IsEnabled = false;
-
             }
             else if (txtName.Text == string.Empty)
             {
                 MessageBox.Show("Please enter a valid name.", "Error");
                 btnAddUser.IsEnabled = false;
-
             }
             else
             {
                 btnAddUser.IsEnabled = true;
-                Thelist.Add(new User(txtEMail.Text, txtEMail.Text)
+                Thelist.Add(new User(txtName.Text, txtEMail.Text)
                 {
                     Name = txtName.Text,
                     EMail = txtEMail.Text
                 });
-
+               
                 lstUsers.Items.Add(Thelist.LastOrDefault());
                 btnAddUser.IsEnabled = false;
-                InvalidEmailAdress.Visibility = Visibility.Visible;
             }
-
 
             //ta bort text från textboxarna
             ClearTextBoxes();
-
-            //sortera listan alfabetiskt efter förändring i user-listboxen
-            //SortUserListBox();
-
-
         }
         
-
+        //Uppdatera user
         private void btnUpdateUser_Click(object sender, RoutedEventArgs e)
         {
             if (lstUsers.SelectedIndex != -1)
@@ -98,7 +90,6 @@ namespace Labb5
                 int index = lstUsers.SelectedIndex;
                 if (!CheckMail(txtEMail.Text))
                 {
-                    InvalidEmailAdress.Visibility = Visibility.Visible;
                     MessageBox.Show("Plese enter a valid email adress!", "Error!");
                 }
                 else
@@ -114,10 +105,6 @@ namespace Labb5
 
                     //ta bort text från textboxarna
                     ClearTextBoxes();
-
-                    //sortera listan alfabetiskt efter förändring i user-listboxen
-                    //SortUserListBox();
-
                 }
             }
             else if (lstAdmins.SelectedIndex != -1)
@@ -125,7 +112,6 @@ namespace Labb5
                 int index = lstAdmins.SelectedIndex;
                 if (!CheckMail(txtEMail.Text))
                 {
-                    InvalidEmailAdress.Visibility = Visibility.Visible;
                     MessageBox.Show("Plese enter a valid email adress!", "Error!");
                 }
                 else
@@ -140,22 +126,15 @@ namespace Labb5
 
                     //ta bort text från textboxarna
                     ClearTextBoxes();
-
-                    //sortera listan alfabetiskt efter förändring i user-listboxen
-                    //SortUserListBox();
                 }
 
             }
 
             //ta bort text från textboxarna
             ClearTextBoxes();
-
-            //sortera listan alfabetiskt efter uppdatering i user-listboxen
-            //SortUserListBox();
-
         }
 
-       //sägger enable tll av eller på beroende på om item är valt i user-listboxen för tre stycken knappar
+       //sätter enable tll av eller på beroende på om item är valt i user-listboxen för tre stycken knappar
         private void lstUsers_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lstUsers.SelectedItem != null)
@@ -164,8 +143,6 @@ namespace Labb5
                 btnDeleteUser.IsEnabled = true;
                 btnBecomeAdmin.IsEnabled = true;
                 lblFullUserInfo.Visibility = Visibility.Visible;
-
-
             }
             else if(lstUsers.SelectedItem == null)
             {
@@ -174,8 +151,6 @@ namespace Labb5
                 lblFullUserInfo.Visibility = Visibility.Hidden;
             }
             
-           
-
             object pos = lstUsers.SelectedItem;
             try
             {
@@ -201,8 +176,6 @@ namespace Labb5
                 btnBecomeUser.IsEnabled = false;
                 btnDeleteUser.IsEnabled = false;
             }
-
-            
             
             object pos = lstAdmins.SelectedItem;
             try
@@ -211,36 +184,48 @@ namespace Labb5
             }
             catch { }
         }
-
-
-
-
+        // Tar bort User från listan av users och listbox
         private void btnDeleteUser_Click(object sender, RoutedEventArgs e)
         {
             if (lstUsers.SelectedItem != null)
-            lstUsers.Items.Remove(lstUsers.SelectedItem);
+            {
+                try { 
+                var item = Thelist.LastOrDefault(x => txtName.Text == Name);
+                    if (item != null)
+                    {
+                        Thelist.Remove(item);
+                    }
+                    lstUsers.Items.Remove(lstUsers.SelectedItem);
+                }
+                catch { }
+            }
 
-            else if(lstAdmins != null)
-                lstAdmins.Items.Remove(lstAdmins.SelectedItem);
-
-
+            else if (lstAdmins.SelectedItem != null)
+            {
+                try
+                {
+                    var item = Thelist.LastOrDefault(x => txtName.Text == Name);
+                    if (item != null)
+                    {
+                        Thelist.Remove(item);
+                    }
+                    lstAdmins.Items.Remove(lstAdmins.SelectedItem);
+                }
+                catch { }
+            }
         }
 
+        //Omvandla user till admin
         private void btnBecomeAdmin_Click(object sender, RoutedEventArgs e)
         {
             if (lstUsers.SelectedItem != null)
             {
-                
                 lstAdmins.Items.Add(lstUsers.SelectedItem);
                 lstUsers.Items.Remove(lstUsers.SelectedItem);
             }
-
-            //sortera i adminlistan efter element har lags till där från user-listan
-            //SortAdminListBox();
-
-
+            
         }
-
+        //Omvandla till user
         private void btnBecomeUser_Click(object sender, RoutedEventArgs e)
         {
             if (lstAdmins.SelectedItem != null)
@@ -248,14 +233,8 @@ namespace Labb5
                 lstUsers.Items.Add(lstAdmins.SelectedItem);
                 lstAdmins.Items.Remove(lstAdmins.SelectedItem);
             }
-
-            //sortera i userlistan efter element har lagts tlll där från admin-listan
-            //SortUserListBox();
+ 
         }
-
-
-
-
         //rensar textboxarna från default-text
         private void txtName_GotFocus(object sender, RoutedEventArgs e)
         {
@@ -267,36 +246,19 @@ namespace Labb5
            txtEMail.Clear();
         }
 
-
-
-        //hjälpmetoder för rensning av textboxar samt sortering av listbox
+        //hjälpmetod för rensning av textboxar 
         public void ClearTextBoxes()
         {
             txtName.Clear();
             txtEMail.Clear();
         }
 
-        //public void SortUserListBox()
-        //{
-        //    lstUsers.Items.SortDescriptions.Add(
-        //        new System.ComponentModel.SortDescription("",
-        //            System.ComponentModel.ListSortDirection.Ascending));
 
-
-        //}
-
-        //public void SortAdminListBox()
-        //{
-        //    lstAdmins.Items.SortDescriptions.Add(
-        //        new System.ComponentModel.SortDescription("",
-        //            System.ComponentModel.ListSortDirection.Ascending));
-        //}
-
+        //Slår på add-user om mail-adressen är korrekt ifylld. (regex)
         private void txtEMail_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (CheckMail(txtEMail.Text))
             {
-                InvalidEmailAdress.Visibility = Visibility.Hidden;
                 btnAddUser.IsEnabled = true;
             }
         }
@@ -312,22 +274,11 @@ namespace Labb5
             this.Name= name;
             this.EMail = email;
         }
-
-
+        
+        //overtide för korrekt info
         public override string ToString()
         {
-
-            return String.Format("Email: {0}", this.EMail);
-
+            return String.Format("Name: {0}\n@: {1}", this.Name, this.EMail);
         }
-
     }
-
-
-
-
-
-    
-
-
 } //EOF
